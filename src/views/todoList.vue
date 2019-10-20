@@ -1,10 +1,18 @@
 <template>
   <div>
-    <h1>FIT.IT</h1>
+    <Header />
   </div>
 </template>
 
 <script>
+import Header from "../components/Header";
+
+export default {
+  name: "todoList",
+  components: {
+    Header
+  }
+};
 </script>
 
 <style lang="scss" scoped>
