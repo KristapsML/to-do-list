@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <img src="../assets/logo.png" class="logo" />
+    <img src="../assets/logo.png" class="logo" alt="logo" />
     <h1>FIT.IT</h1>
     <h2>Keep your workouts organized</h2>
     <router-link to="/About" class="about-link">Find out more</router-link>
