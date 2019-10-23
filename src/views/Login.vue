@@ -4,8 +4,7 @@
     <h1>FIT.IT</h1>
     <h2>Keep your workouts organized</h2>
     <router-link to="/About" class="about-link">Find out more</router-link>
-    <h3>OR</h3>
-    <router-link to="/todoList" tag="button" class="test">Get Started!</router-link>
+    <section id="firebaseui-auth-container"></section>
   </div>
 </template>
 
@@ -13,7 +12,7 @@
 // @ is an alias to /src
 
 export default {
-  name: "home"
+  name: "Login"
 };
 </script>
 
