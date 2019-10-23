@@ -3,14 +3,19 @@
     <Header />
     <main>
       <div class="container">
-        <form>
-          <input type="text" placeholder="Enter Exercise" />
+        <form @submit.prevent="addTodo">
+          <input v-model.prevent="newTodo" type="text" placeholder="Enter Exercise" id="newTodo" />
           <button type="submit" class="add-btn">Add Exercise</button>
         </form>
+        <button @click="allDone" name="button" type="button">Mark All Done</button>
         <div class="container-list">
           <h2>Your Exercises</h2>
           <ul>
-            <li>Item</li>
+            <li v-for="todo in todos">
+              <input type="checkbox" v-model="todo.done" />
+              <span :class="{done: todo.done}">{{todo.title}}</span>
+              <button type="button" name="button" @click="removeTodo(todo)">Remove Exercise</button>
+            </li>
           </ul>
         </div>
       </div>
@@ -19,12 +24,44 @@
 </template>
 
 <script>
+// Import Header
 import Header from "../components/Header";
-
+// Export
 export default {
   name: "todoList",
   components: {
     Header
+  },
+  // Data Function Create an empty string & array
+  data() {
+    return {
+      newTodo: "",
+      todos: []
+    };
+  },
+  // Methods
+  methods: {
+    // Adding Todo Item // If newTodo is an empty string
+    addTodo() {
+      if (!this.newTodo == "") {
+        this.todos.push({
+          title: this.newTodo,
+          done: false
+        });
+        this.newTodo = "";
+      }
+    },
+    // Storing the index of the todo in a variable so I can remove any list item
+    removeTodo(todo) {
+      const todoIndex = this.todos.indexOf(todo);
+      this.todos.splice(todoIndex, 1);
+    },
+    // Marks all items as done
+    allDone() {
+      this.todos.forEach(todo => {
+        todo.done = true;
+      });
+    }
   }
 };
 </script>
@@ -80,6 +117,10 @@ main {
     border: none;
     border-left: 1px solid white;
     cursor: pointer;
+  }
+
+  .done {
+    text-decoration: line-through;
   }
 }
 </style>
