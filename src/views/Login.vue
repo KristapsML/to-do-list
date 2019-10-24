@@ -4,7 +4,6 @@
     <h1>FIT.IT</h1>
     <h2>Keep your workouts organized</h2>
     <router-link to="/About" class="about-link">Find out more</router-link>
-    <section id="firebaseui-auth-container"></section>
   </div>
 </template>
 

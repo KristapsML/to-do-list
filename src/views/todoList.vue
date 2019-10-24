@@ -1,126 +1,169 @@
 <template>
   <div>
+    <!-- Header Component -->
     <Header />
-    <main>
-      <div class="container">
-        <form @submit.prevent="addTodo">
-          <input v-model.prevent="newTodo" type="text" placeholder="Enter Exercise" id="newTodo" />
-          <button type="submit" class="add-btn">Add Exercise</button>
-        </form>
-        <button @click="allDone" name="button" type="button">Mark All Done</button>
-        <div class="container-list">
-          <h2>Your Exercises</h2>
-          <ul>
-            <li v-for="todo in todos">
-              <input type="checkbox" v-model="todo.done" />
-              <span :class="{done: todo.done}">{{todo.title}}</span>
-              <button type="button" name="button" @click="removeTodo(todo)">Remove Exercise</button>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </main>
+    <!-- Wrapper -->
+    <section class="wrapper">
+      <!-- To-Do form -->
+      <form class="new-todo-form">
+        <label class="new-todo-label">
+          New Todo:
+          <!-- V-model newTodo - the string from input gets passed with @click -->
+          <input v-model="newTodo" type="text" class="new-todo-input" />
+        </label>
+        <button type="submit" @click.prevent="addTodo()" class="new-todo-button">Add</button>
+      </form>
+      <ul class="todo-list">
+        <li v-for="todo in todos" :key="todo.id" class="todo-item">
+          <label class="todo-item-label">
+            <input
+              type="checkbox"
+              v-model="todo.completed"
+              @change="updateTodo(todo)"
+              class="todo-item__checkbox"
+            />
+            {{todo.text}}
+          </label>
+        </li>
+      </ul>
+    </section>
   </div>
 </template>
 
 <script>
-// Import Header
-import Header from "../components/Header";
-// Export
+import { todosCollection } from "../firebase";
+import Header from "../components/Header.vue";
 export default {
   name: "todoList",
   components: {
     Header
   },
-  // Data Function Create an empty string & array
   data() {
     return {
       newTodo: "",
       todos: []
     };
   },
-  // Methods
+  firestore() {
+    return {
+      todos: todosCollection.orderBy("createdAt", "desc")
+    };
+  },
   methods: {
-    // Adding Todo Item // If newTodo is an empty string
     addTodo() {
-      if (!this.newTodo == "") {
-        this.todos.push({
-          title: this.newTodo,
-          done: false
+      todosCollection
+        .add({
+          text: this.newTodo,
+          completed: false,
+          id: this.todos.length,
+          createdAt: new Date()
+        })
+        .then(function(docRef) {
+          console.log("Document written with ID: ", docRef.id);
+        })
+        .catch(function(error) {
+          console.error("Error adding document: ", error);
         });
-        this.newTodo = "";
-      }
+      this.newTodo = "";
     },
-    // Storing the index of the todo in a variable so I can remove any list item
-    removeTodo(todo) {
-      const todoIndex = this.todos.indexOf(todo);
-      this.todos.splice(todoIndex, 1);
-    },
-    // Marks all items as done
-    allDone() {
-      this.todos.forEach(todo => {
-        todo.done = true;
-      });
+    updateTodo(todo) {
+      todosCollection
+        .doc(todo.id)
+        .update({ ...todo })
+        .then(function(docRef) {
+          console.log("Updated document with ID: ", todo.id);
+        })
+        .catch(function(error) {
+          console.error("Error updating document: ", error);
+        });
     }
   }
 };
 </script>
 
-<style lang="scss" scoped>
-main {
-  max-width: 600px;
+<style lang="scss">
+body {
+  margin: 0;
+  padding: 0;
+}
+h1,
+h2 {
+  font-weight: normal;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+a {
+  color: #42b983;
+}
+
+.wrapper {
+  max-width: 500px;
   margin: 0 auto;
-
-  ul {
-    margin-top: 5vh;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    color: #000000;
+  padding: 0 1rem;
+}
+.new-todo-form {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: 3px;
+  border: 1px solid #fafafa;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15);
+  margin-top: 1rem;
+  background: white;
+}
+.new-todo-label {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  justify-content: flex-start;
+  text-align: left;
+  font-weight: bold;
+}
+.new-todo-input {
+  padding: 0.5rem;
+  border-radius: 3px;
+  border: 1px solid lightgrey;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  font-weight: normal;
+}
+.new-todo-button {
+  font-size: 1rem;
+  padding: 0.5rem 0.7rem;
+  border-radius: 3px;
+  color: white;
+  font-weight: bold;
+  background: #3dce6b;
+  flex: 1;
+  margin-left: 1rem;
+  border: 1px solid #3dce6b;
+}
+.todo-item {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid lightgrey;
+  border-left: 1px solid lightgrey;
+  border-right: 1px solid lightgrey;
+  &:first-of-type {
+    border-radius: 3px 3px 0 0;
   }
-
-  input[type="text"] {
-    margin-top: 1vh;
-    height: 50px;
-    width: 350px;
-    font-size: 1.5rem;
-    border: none;
-    background-color: #8c8c8c;
-    color: #ffffff;
-    padding-right: 50px;
-
-    &::placeholder {
-      color: #d9d9d9;
-    }
+  &:last-of-type {
+    border-bottom: 1px solid lightgrey;
+    border-radius: 0 0 3px 3px;
   }
-
-  input[type="text"]:focus {
-    outline: none;
-    background-color: #464646;
-  }
-
-  .container {
-    margin-top: 5vh;
-    height: 70vh;
-  }
-
-  .container-list {
-    margin-top: 5vh;
-  }
-
-  .add-btn {
-    font-size: 1.5rem;
-    height: 50px;
-    background-color: #37a859;
-    color: #ffffff;
-    margin-left: -55px;
-    border: none;
-    border-left: 1px solid white;
-    cursor: pointer;
-  }
-
-  .done {
-    text-decoration: line-through;
-  }
+}
+.todo-item-label {
+  cursor: pointer;
+  padding: 1rem;
+}
+.todo-item__checkbox {
+  margin-right: 1rem;
+}
+.todo-list {
+  max-width: 100%;
+  margin: 2rem auto;
 }
 </style>
