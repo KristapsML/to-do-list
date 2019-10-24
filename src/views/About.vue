@@ -2,9 +2,7 @@
   <div class="flex">
     <img src="../assets/logo.png" class="logo" alt="logo" />
     <h1>FIT.IT</h1>
-    <h2>Keep your workouts organized</h2>
-    <router-link to="/About" class="about-link">Find out more</router-link>
-    <h3>OR</h3>
+    <p>FIT.IT is an App created for fitness enthusiasts, by fitness enthusiasts. No matter what your exercise routine or sport consists of, FIT.IT is here to help and plan your routine on the go. With intuitive interface, the ability to remove tasks and add new ones whenever, be it on your phone or computer, has never been easier.</p>
     <router-link to="/todoList" tag="button" class="big-btn">Get Started</router-link>
   </div>
 </template>
@@ -13,7 +11,7 @@
 // @ is an alias to /src
 
 export default {
-  name: "Login"
+  name: "About"
 };
 </script>
 
@@ -31,6 +29,15 @@ export default {
   h4 {
     color: #ffffff;
     letter-spacing: 0.15rem;
+  }
+
+  p {
+    color: #ffffff;
+    letter-spacing: 0.1rem;
+    min-width: 35%;
+    max-width: 40%;
+    text-align: center;
+    line-height: 1.25;
   }
 
   h1 {

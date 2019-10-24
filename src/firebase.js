@@ -12,6 +12,5 @@ const app = initializeApp({
     appId: "1:467465108582:web:fa7eef4d706be872ec01a7",
     measurementId: "G-T56F43KR5M"
 });
-
 export const db = app.firestore();
 export const todosCollection = db.collection('todos');

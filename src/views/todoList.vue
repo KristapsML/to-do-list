@@ -14,6 +14,7 @@
         <button type="submit" @click.prevent="addTodo()" class="new-todo-button">Add</button>
       </form>
       <ul class="todo-list">
+        <!-- Show todo items, list rendering -->
         <li v-for="todo in todos" :key="todo.id" class="todo-item">
           <label class="todo-item-label">
             <input
@@ -31,24 +32,30 @@
 </template>
 
 <script>
+// Imports
 import { todosCollection } from "../firebase";
 import Header from "../components/Header.vue";
+// Export Default
 export default {
   name: "todoList",
   components: {
     Header
   },
+
+  // Empty string & array
   data() {
     return {
       newTodo: "",
       todos: []
     };
   },
+  // Firestore returns todos
   firestore() {
     return {
       todos: todosCollection.orderBy("createdAt", "desc")
     };
   },
+  // Adding todos
   methods: {
     addTodo() {
       todosCollection
@@ -58,9 +65,12 @@ export default {
           id: this.todos.length,
           createdAt: new Date()
         })
+
+        // Console logs when an item is added
         .then(function(docRef) {
           console.log("Document written with ID: ", docRef.id);
         })
+        // Otherwise console logs an error
         .catch(function(error) {
           console.error("Error adding document: ", error);
         });

@@ -67,4 +67,13 @@ img {
   width: 180px;
   height: 180px;
 }
+
+.big-btn {
+  font-size: 1.5rem;
+  background: none;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  box-shadow: 1px 1px 2px #ccc;
+  cursor: pointer;
+}
 </style>
